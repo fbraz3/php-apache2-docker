@@ -10,7 +10,8 @@ ENV DEBIAN_FRONTEND=noninteractive
 ENV ENTRYPOINT_COMMAND="/usr/bin/tail -f /var/log/nginx/*.log"
 
 COPY ../../assets/scripts/docker-entrypoint.sh /entrypoints/2-nginx-entrypoint.sh
-RUN chmod +x /entrypoints/2-nginx-entrypoint.sh
+COPY ../../assets/scripts/healthcheck.sh /healthcheck.sh
+RUN chmod +x /entrypoints/2-nginx-entrypoint.sh /healthcheck.sh
 
 #ensure php repo is up-to-date
 RUN for i in {1..10}; do \
@@ -19,7 +20,8 @@ RUN for i in {1..10}; do \
 
 RUN /usr/bin/unattended-upgrades -v;
 
-RUN for i in {1..10}; do \
+RUN apt-get update --allow-releaseinfo-change && apt-get upgrade -y && \
+    for i in {1..10}; do \
       apt-get install -fy nginx && break || sleep 10; \
     done
 
@@ -39,5 +41,6 @@ RUN chown -R www-data. /var/log/nginx; \
     chown www-data. /run/nginx.pid;
 
 WORKDIR /app
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 CMD /healthcheck.sh
 USER www-data
 ENTRYPOINT ["/docker-entrypoint.sh"]
