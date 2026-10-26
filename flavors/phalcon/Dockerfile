@@ -18,7 +18,7 @@ RUN for i in {1..10}; do \
       add-apt-repository -y ppa:ondrej/php && break || sleep 10; \
     done
 
-RUN /usr/bin/unattended-upgrades -v;
+RUN apt-get update && apt-get -yq dist-upgrade;
 
 RUN apt-get update --allow-releaseinfo-change && apt-get upgrade -y && \
     for i in {1..10}; do \
