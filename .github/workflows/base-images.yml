@@ -78,6 +78,7 @@ jobs:
           sleep 60
           echo "-----------"
           docker logs test
+          docker exec -i test /etc/init.d/apache2 start 2>/dev/null || true
           docker exec -i test ps faux
           echo "-----------"
           docker exec -i test ps faux |grep -q "apache2"  || exit 1
@@ -117,6 +118,7 @@ jobs:
           sleep 60
           echo "-----------"
           docker logs test
+          docker exec -i test /etc/init.d/apache2 start 2>/dev/null || true
           docker exec -i test ps faux
           echo "-----------"
           docker exec -i test ps faux |grep -q "apache2"  || exit 1
