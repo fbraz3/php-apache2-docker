@@ -42,7 +42,8 @@ RUN chown -R www-data. /var/log/apache2; \
     chown -R www-data. /etc/apache2/sites-enabled/; \
     chown -R www-data. /etc/apache2/sites-available/; \
     rm -rf /var/run/apache2/apache2.pid; \
-    chown www-data. /var/run/apache2/;
+    chown www-data. /var/run/apache2/; \
+    chown -R www-data. /var/run/php/ /run/php/ /var/log/php* /etc/php/$PHP_VERSION/fpm/ 2>/dev/null || true;
 
 WORKDIR /app
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 CMD /healthcheck.sh
