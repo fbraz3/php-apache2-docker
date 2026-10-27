@@ -11,7 +11,7 @@ on:
     - cron: '0 9 * * 2'
 
 env:
-  CACHE_VERSION: cache-v2
+  CACHE_VERSION: cache-v3
 
 jobs:
   build_images:
@@ -89,7 +89,7 @@ jobs:
             fi
             sleep 2
           done
-          curl http://127.0.0.1/ | grep -q "Hello World" || (docker exec -i test cat /var/log/php*fpm.log 2>/dev/null; exit 1)
+          curl http://127.0.0.1/ | grep -q "Hello World" || (docker exec -i test cat /var/log/apache2/error.log 2>/dev/null; docker exec -i test monit status 2>/dev/null; exit 1)
           docker exec -i test monit summary || exit 1
           docker stop test
         env:
@@ -130,7 +130,7 @@ jobs:
             fi
             sleep 2
           done
-          curl http://127.0.0.1/ | grep -q "Hello World" || (docker exec -i test cat /var/log/php*fpm.log 2>/dev/null; exit 1)
+          curl http://127.0.0.1/ | grep -q "Hello World" || (docker exec -i test cat /var/log/apache2/error.log 2>/dev/null; docker exec -i test monit status 2>/dev/null; exit 1)
           docker exec -i test monit summary || exit 1
           docker stop test
         env:
